@@ -18,13 +18,33 @@ const CreateTask = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        // Validaciones
+        if (!task.Tarea) {
+            alert("La tarea no puede estar vacía");
+            return;
+        }
+        if (new Date(task.Fecha_Límite) < new Date(task.Fecha_Creación)) {
+            alert("La fecha límite no puede ser anterior a la fecha de creación");
+            return;
+        }
+
         createTask(task)
             .then(response => {
-                console.log('Task created successfully:', response.data);
-                // puedes añadir lógica para actualizar la lista de tareas o redirigir al usuario
+                alert("Tarea creada con éxito");
+                // Limpia el formulario o redirige
+                setTask({
+                    ID_Lista: '',
+                    Tarea: '',
+                    Prioridad: 'Hacer',
+                    Estado: 'No Iniciado',
+                    Fecha_Creación: new Date().toISOString().slice(0, 10),
+                    Fecha_Límite: '',
+                });
             })
             .catch(error => {
-                console.error('There was an error creating the task!', error);
+                alert("Hubo un error creando la tarea");
+                console.error('Error:', error);
             });
     };
 
